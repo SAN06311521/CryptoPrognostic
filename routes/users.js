@@ -6,7 +6,7 @@ const fetch= require('node-fetch')
 const user = require('../models/user')
 var cron = require('node-cron');
 
-cron.schedule('1 * * * * *', () => {
+cron.schedule('* 1 * * * *', () => {
     console.log('donedonadone');
     
   checking();
