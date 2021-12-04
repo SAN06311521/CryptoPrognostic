@@ -4,11 +4,9 @@ const router = express.Router();
 const User = require("../models/user");
 const fetch = require("node-fetch");
 const user = require("../models/user");
-const mailgun = require("mailgun-js");
-
 var cron = require("node-cron");
 
-cron.schedule("1 * * * * *", () => {
+cron.schedule("* 1 * * * *", () => {
   console.log("donedonadone");
 
   checking();
@@ -16,12 +14,7 @@ cron.schedule("1 * * * * *", () => {
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
 function sendmail(user, el) {
-  const DOMAIN = process.env.MAILGUN_DOMAIN;
-  const mg = mailgun({
-    apiKey: process.env.MAILGUN_API_KEY,
-    domain: DOMAIN,
-  });
-  const data = {
+  const msg = {
     to: user.email, // Change to your recipient
     from: "cryptoprognostic@gmail.com", // Change to your verified sender
     subject: "The Crypto Alert is here!!!",
@@ -36,40 +29,16 @@ function sendmail(user, el) {
         
         You can unsubscribe your alerts from Crypto Prognostic if you wish to!`,
   };
-  mg.messages().send(data, function (error, body) {
-    console.log(body);
-    console.log("Email sent");
-    console.log("sent to", user.email);
-  });
+  sgMail
+    .send(msg)
+    .then(() => {
+      console.log("Email sent");
+      console.log("sent to", user.email);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 }
-
-// function sendmail(user,el){
-//     const msg = {
-//         to: user.email, // Change to your recipient
-//         from: 'cryptoprognostic@gmail.com', // Change to your verified sender
-//         subject: 'The Crypto Alert is here!!!',
-//         text: `Hey ${user.firstName}!
-//         Dropping this mail to remind you that your Alert is live now!!
-//         The form submission by you on our site, Crypto Prognostic, was successful. Here is the ALERT mail which says - the price of ${user.cryptoCoin} has reached ${user.criticalValuePrice} and it's current price, now, is ${el.current_price}.
-//         Our heartiest thanksgiving, for visiting our website and trusting our Alert feature! We are promising to maintain our service always available for you.
-//         You can set another alert by visiting our site any time! We will be pleased to help you.
-
-//         Best Regards,
-//         Crypto Prognostic Team.
-
-//         You can unsubscribe your alerts from Crypto Prognostic if you wish to!`,
-//     }
-//     sgMail
-//         .send(msg)
-//         .then(() => {
-//             console.log('Email sent');
-//             console.log('sent to', user.email);
-//         })
-//         .catch((error) => {
-//             console.error(error)
-//     })
-
-// }
 
 async function checking() {
   let finalArray = [];
