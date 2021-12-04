@@ -16,9 +16,9 @@ cron.schedule("1 * * * * *", () => {
 sgMail.setApiKey(process.env.SEND_GRID_API_KEY);
 
 function sendmail(user, el) {
-  const DOMAIN = "sandboxe0dc066c7e834f0e9433ea2aba0e7cd4.mailgun.org";
+  const DOMAIN = process.env.MAILGUN_DOMAIN;
   const mg = mailgun({
-    apiKey: "bef889241e65942e29d8da6c1eaed0d0-7b8c9ba8-605abc76",
+    apiKey: process.env.MAILGUN_API_KEY,
     domain: DOMAIN,
   });
   const data = {
