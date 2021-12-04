@@ -32,7 +32,8 @@ function sendmail(user,el){
     sgMail
         .send(msg)
         .then(() => {
-            console.log('Email sent')
+            console.log('Email sent');
+            console.log('sent to', user.email);
         })
         .catch((error) => {
             console.error(error)
